@@ -280,8 +280,10 @@ pb_ProRet_Combined$species <- "pb"
 
 ## pb - Protraction / Retraction correction
 #some values of pb_ProRet_Combined seem to have spontaneously changed sign 
-#so I changed those values back to normal. I also subtracted 90 degrees
-#to change 0 degrees to being perpendicular to the torso, which we were already doing
+#(see orig_pbProRet_Combined plot) so those values were multiplied by -1 to change
+#the sign back to normal (see orig_pbProRet_Combined_fixed plot). 
+#We also subtracted 90 degrees from all values to make the "neutral pose" 
+#(fins perpendicular to body wall, explained further in Quigley et al. 2022) to 0 degrees
 
 # Plotting the original data
 orig_pbProRet_Combined <- reshape2::melt(pb_ProRet_Combined)
@@ -337,7 +339,7 @@ pb_Pitch_Combined$filename <- unlist(pb_kin_trial)
 pb_Pitch_Combined$appendage <- unlist(pb_kin_group)
 pb_Pitch_Combined$species <- "pb"
 
-#Correct by 90 degrees to change how angles relate to body position
+#Correct by 90 degrees to set 0 degrees level to the horizon
 pb_Pitch_Combined[,1:101] <- pb_Pitch_Combined[,1:101]-90
 
 
@@ -392,7 +394,7 @@ at_pec_ProRet_Combined$filename <- unlist(at_pec_kin_trial)
 at_pec_ProRet_Combined$appendage <- unlist(at_pec_kin_group)
 at_pec_ProRet_Combined$species <- "at"
 
-## at_pec - Protaction / Retraction angle - corrected by 90 degrees
+## at_pec - Protaction / Retraction angle - corrected by 90 degrees (see line 285)
 at_pec_ProRet_Combined_Corr <- at_pec_ProRet_Combined
 at_pec_ProRet_Combined_Corr[,1:101] <- at_pec_ProRet_Combined[,1:101]-90
 
@@ -425,7 +427,7 @@ at_pec_Pitch_Combined$filename <- unlist(at_pec_kin_trial)
 at_pec_Pitch_Combined$appendage <- unlist(at_pec_kin_group)
 at_pec_Pitch_Combined$species <- "at"
 
-#Correct by 90 degrees to change how angles relate to body position
+#Correct by 90 degrees to set 0 degrees level with horizon
 at_pec_Pitch_Combined[,1:101] <- at_pec_Pitch_Combined[,1:101]-90
 
 
@@ -485,8 +487,8 @@ at_pel_ProRet_Combined$species <- "at"
 ## at_pel - Protaction / Retraction angle - corrected by 90 degrees
 at_pel_ProRet_Combined_fixed<- at_pel_ProRet_Combined
 at_pel_ProRet_Combined_fixed[,1:101] <- at_pel_ProRet_Combined[,1:101]-90
-at_pel_ProRet_Combined_fixed <- at_pel_ProRet_Combined_fixed[-c(7,48),] # why are these being removed?
-# this is missing two trials
+#Two trials (7 and 48) have some sort of error at start of stance
+at_pel_ProRet_Combined_fixed <- at_pel_ProRet_Combined_fixed[-c(7,48),]
 
 ## at_pel - Knee / Elbow angle 
 at_pel_KneeAng <- rep(NA, length(kinFiles_at_pel))
@@ -517,7 +519,7 @@ at_pel_Pitch_Combined$filename <- unlist(at_pel_kin_trial)
 at_pel_Pitch_Combined$appendage <- unlist(at_pel_kin_group)
 at_pel_Pitch_Combined$species <- "at"
 
-#Correct by 90 degrees to change how angles relate to body position
+#Correct by 90 degrees to set 0 degrees parallel to horizon
 at_pel_Pitch_Combined[,1:101] <- at_pel_Pitch_Combined[,1:101]-90
 
 
@@ -716,7 +718,7 @@ pec_Yaw_MaxMin <- aes(ymax=pec_Yaw_Mean_SE$mean + pec_Yaw_Mean_SE$SE, ymin=pec_Y
 
 
 pec_Yaw_Plot <- ggplot(data=pec_Yaw_Mean_SE, aes(x=stance, y=mean, fill=species, linetype=species))+
-  scale_y_continuous("\nYaw (°)")+
+  scale_y_continuous("\nYaw (?)")+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -752,7 +754,7 @@ pec_AbdAdd_MaxMin <- aes(ymax=pec_AbdAdd_Mean_SE$mean + pec_AbdAdd_Mean_SE$SE, y
 
 
 pec_AbdAdd_Plot <- ggplot(data=pec_AbdAdd_Mean_SE, aes(x=stance, y=mean, fill=species, linetype=species))+
-  scale_y_continuous("\nAbduct / Adduct (°)")+
+  scale_y_continuous("\nAbduct / Adduct (?)")+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -788,7 +790,7 @@ pec_ProRet_Corr_MaxMin <- aes(ymax=pec_ProRet_Corr_Mean_SE$mean + pec_ProRet_Cor
 
 
 pec_ProRet_Corr_Plot <- ggplot(data=pec_ProRet_Corr_Mean_SE, aes(x=stance, y=mean, fill=species, linetype=species))+
-  scale_y_continuous("\nProtract / Retract (°)")+
+  scale_y_continuous("\nProtract / Retract (?)")+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -825,7 +827,7 @@ pec_KneeAng_MaxMin <- aes(ymax=pec_KneeAng_Mean_SE$mean + pec_KneeAng_Mean_SE$SE
 pec_KneeAng_Plot <- ggplot(data=pec_KneeAng_Mean_SE, aes(x=stance, y=mean, fill=species, linetype=species))+
   #scale_y_continuous("\nElbow angle (degrees)")+
   #set Elbow/Knee and Wrist/Ankle to have the same scale
-  scale_y_continuous(name = "\nElbow angle (°)", limits = c(60, 170))+
+  scale_y_continuous(name = "\nElbow angle (?)", limits = c(60, 170))+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -863,7 +865,7 @@ pec_AnkAng_MaxMin <- aes(ymax=pec_AnkAng_Mean_SE$mean + pec_AnkAng_Mean_SE$SE, y
 pec_AnkAng_Plot <- ggplot(data=pec_AnkAng_Mean_SE, aes(x=stance, y=mean, fill=species, linetype=species))+
   #scale_y_continuous("\nWrist angle (degrees)")+
   #set Elbow/Knee and Wrist/Ankle to have the same scale
-  scale_y_continuous(name = "\nWrist angle (°)", limits = c(60, 170))+
+  scale_y_continuous(name = "\nWrist angle (?)", limits = c(60, 170))+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -899,7 +901,7 @@ pec_Pitch_MaxMin <- aes(ymax=pec_Pitch_Mean_SE$mean + pec_Pitch_Mean_SE$SE, ymin
 
 
 pec_Pitch_Plot <- ggplot(data=pec_Pitch_Mean_SE, aes(x=stance, y=mean, fill=species, linetype=species))+
-  scale_y_continuous("\nPitch angle (°)")+
+  scale_y_continuous("\nPitch angle (?)")+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -938,7 +940,7 @@ propulsor_Yaw_MaxMin <- aes(ymax=propulsor_Yaw_Mean_SE$mean + propulsor_Yaw_Mean
 
 
 propulsor_Yaw_Plot <- ggplot(data=propulsor_Yaw_Mean_SE, aes(x=stance, y=mean, fill=species, linetype=species))+
-  scale_y_continuous("\nYaw (°)")+
+  scale_y_continuous("\nYaw (?)")+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -975,7 +977,7 @@ propulsor_AbdAdd_MaxMin <- aes(ymax=propulsor_AbdAdd_Mean_SE$mean + propulsor_Ab
 
 
 propulsor_AbdAdd_Plot <- ggplot(data=propulsor_AbdAdd_Mean_SE, aes(x=stance, y=mean, fill=species, linetype=species))+
-  scale_y_continuous(name = "\nAbduct / Adduct (°)", limits = c(-65, 0))+
+  scale_y_continuous(name = "\nAbduct / Adduct (?)", limits = c(-65, 0))+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -1011,7 +1013,7 @@ propulsor_ProRet_Corr_MaxMin <- aes(ymax=propulsor_ProRet_Corr_Mean_SE$mean + pr
 
 
 propulsor_ProRet_Corr_Plot <- ggplot(data=propulsor_ProRet_Corr_Mean_SE, aes(x=stance, y=mean, fill=species, linetype=species))+
-  scale_y_continuous("\nProtract / Retract (°)")+
+  scale_y_continuous("\nProtract / Retract (?)")+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -1048,7 +1050,7 @@ propulsor_KneeAng_MaxMin <- aes(ymax=propulsor_KneeAng_Mean_SE$mean + propulsor_
 propulsor_KneeAng_Plot <- ggplot(data=propulsor_KneeAng_Mean_SE, aes(x=stance, y=mean, fill=species, linetype=species))+
   #scale_y_continuous("\n'Elbow'/Knee angle (degrees)")+
   #set Elbow/Knee and Wrist/Ankle to have the same scale
-  scale_y_continuous(name = "\n'Elbow'/Knee angle (°)", limits = c(60, 170))+
+  scale_y_continuous(name = "\n'Elbow'/Knee angle (?)", limits = c(60, 170))+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -1084,7 +1086,7 @@ propulsor_AnkAng_MaxMin <- aes(ymax=propulsor_AnkAng_Mean_SE$mean + propulsor_An
 propulsor_AnkAng_Plot <- ggplot(data=propulsor_AnkAng_Mean_SE, aes(x=stance, y=mean, fill=species, linetype=species))+
   #scale_y_continuous("\n'Elbow'/Knee angle (degrees)")+
   #set Elbow/Knee and Wrist/Ankle to have the same scale
-  scale_y_continuous(name = "\n'Wrist'/Ankle angle (°)", limits = c(60, 170))+
+  scale_y_continuous(name = "\n'Wrist'/Ankle angle (?)", limits = c(60, 170))+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -1118,7 +1120,7 @@ propulsor_Pitch_MaxMin <- aes(ymax=propulsor_Pitch_Mean_SE$mean + propulsor_Pitc
 
 
 propulsor_Pitch_Plot <- ggplot(data=propulsor_Pitch_Mean_SE, aes(x=stance, y=mean, fill=species, linetype=species))+
-  scale_y_continuous("\nPitch angle (°)")+
+  scale_y_continuous("\nPitch angle (?)")+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -1157,7 +1159,7 @@ limb_Yaw_MaxMin <- aes(ymax=limb_Yaw_Mean_SE$mean + limb_Yaw_Mean_SE$SE, ymin=li
 
 
 limb_Yaw_Plot <- ggplot(data=limb_Yaw_Mean_SE, aes(x=stance, y=mean, fill=type, linetype=type))+
-  scale_y_continuous("\nYaw (°)")+
+  scale_y_continuous("\nYaw (?)")+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -1196,7 +1198,7 @@ limb_Pitch_MaxMin <- aes(ymax=limb_Pitch_Mean_SE$mean + limb_Pitch_Mean_SE$SE, y
 
 
 limb_Pitch_Plot <- ggplot(data=limb_Pitch_Mean_SE, aes(x=stance, y=mean, fill=type, linetype=type))+
-  scale_y_continuous("\nPitch angle (°)")+
+  scale_y_continuous("\nPitch angle (?)")+
   #scale_x_continuous("\nStance (%)\n")+
   scale_x_continuous(element_blank())+
   geom_line(size=1, alpha=0.75)+
@@ -1858,29 +1860,6 @@ lmer(Tmin ~ appendage + (1|Ind), data = at_pecpel_AnkAng_Combined)
 
 # Checking what the mean and sd are for Tmin 
 aggregate(at_pec$Tmin, list(at_pec$Ind),  function(x) c(mean = mean(x), sd = sd(x)))
-
-
-
-
-#### UNUSED CODE ####
-
-
-# ####### SAVING DATA FOR FIGURE 2 IN SHEFFIELD AND BLOB (2008) #########
-# pb_kinSave <- rbind(	cbind(AfHL.FemHzAng.Combined, Variable = "AbductAdductAngle"),
-#                    cbind(AfHL.AnkAng.Combined, Variable = "WristAnkleAngle"),
-#                    cbind(AfHL.FemTVAng.Corr.Combined, Variable = "ProtractRetractAngle"),
-#                    cbind(AfHL.AnkAng.Combined, Variable = "KneeElbowAngle"),
-#                    cbind(AfFL.FemHzAng.Combined, Variable = "AbductAdductAngle"),
-#                    cbind(AfFL.AnkAng.Combined, Variable = "WristAnkleAngle"),
-#                    cbind(AfFL.FemTVAng.Corr.Combined, Variable = "ProtractRetractAngle"),
-#                    cbind(pb_KneeAng_Combined, Variable = "KneeElbowAngle")
-# 
-# 
-# 
-# #setwd('/Users/SandyMKawano/Google Drive/Research/Fish and Salamander Bone Loading/')
-# KineSaveName <- paste("Bone Load Kinematic Data_pb_", SaveDate, ".csv", sep="" )
-# write.csv(KineSave, file = KineSaveName, row.names = FALSE)
-
 
 
 
